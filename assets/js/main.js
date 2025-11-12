@@ -35,8 +35,8 @@ function initGradientDescent() {
         .datum(curveData)
         .attr("d", line)
         .attr("fill", "none")
-        .attr("stroke", "#60a5fa")
-        .attr("stroke-width", 3);
+        .attr("stroke", "#444")
+        .attr("stroke-width", 2);
     
     svg.append("g")
         .attr("class", "axis")
@@ -52,8 +52,8 @@ function initGradientDescent() {
         .attr("x", width / 2)
         .attr("y", height - 5)
         .attr("text-anchor", "middle")
-        .style("font-size", "12px")
-        .style("fill", "#94a3b8")
+        .style("font-size", "11px")
+        .style("fill", "#666")
         .text("Parameter (θ)");
     
     svg.append("text")
@@ -61,8 +61,8 @@ function initGradientDescent() {
         .attr("x", -height / 2)
         .attr("y", 15)
         .attr("text-anchor", "middle")
-        .style("font-size", "12px")
-        .style("fill", "#94a3b8")
+        .style("font-size", "11px")
+        .style("fill", "#666")
         .text("Loss");
     
     let currentX = 4;
@@ -72,16 +72,18 @@ function initGradientDescent() {
     const currentPoint = svg.append("circle")
         .attr("cx", xScale(currentX))
         .attr("cy", yScale(lossFunction(currentX)))
-        .attr("r", 8)
-        .attr("fill", "#f87171");
+        .attr("r", 6)
+        .attr("fill", "#fff")
+        .attr("stroke", "#000")
+        .attr("stroke-width", 2);
     
     const pathHistory = [{ x: currentX, y: lossFunction(currentX) }];
     const pathLine = svg.append("path")
         .attr("fill", "none")
-        .attr("stroke", "#fbbf24")
-        .attr("stroke-width", 2)
-        .attr("stroke-dasharray", "5,5")
-        .attr("opacity", 0.6);
+        .attr("stroke", "#666")
+        .attr("stroke-width", 1.5)
+        .attr("stroke-dasharray", "4,4")
+        .attr("opacity", 0.5);
     
     function updateVisualization() {
         currentPoint
@@ -190,8 +192,8 @@ function initBoundaryVisualization() {
         .attr("x", width / 2)
         .attr("y", height - 5)
         .attr("text-anchor", "middle")
-        .style("font-size", "12px")
-        .style("fill", "#94a3b8")
+        .style("font-size", "11px")
+        .style("fill", "#666")
         .text("Feature 1");
     
     svg.append("text")
@@ -199,8 +201,8 @@ function initBoundaryVisualization() {
         .attr("x", -height / 2)
         .attr("y", 15)
         .attr("text-anchor", "middle")
-        .style("font-size", "12px")
-        .style("fill", "#94a3b8")
+        .style("font-size", "11px")
+        .style("fill", "#666")
         .text("Feature 2");
     
     svg.selectAll(".data-point")
@@ -209,10 +211,10 @@ function initBoundaryVisualization() {
         .append("circle")
         .attr("cx", d => xScale(d.x))
         .attr("cy", d => yScale(d.y))
-        .attr("r", 5)
-        .attr("fill", d => d.class === 0 ? "#60a5fa" : "#f59e0b")
-        .attr("opacity", 0.8)
-        .attr("stroke", d => d.class === 0 ? "#3b82f6" : "#d97706")
+        .attr("r", 4)
+        .attr("fill", d => d.class === 0 ? "#666" : "#999")
+        .attr("opacity", 0.6)
+        .attr("stroke", d => d.class === 0 ? "#444" : "#777")
         .attr("stroke-width", 1);
     
     // Pre-computed boundary positions for each epoch 
@@ -231,8 +233,8 @@ function initBoundaryVisualization() {
     ];
     
     const boundaryLine = svg.append("line")
-        .attr("stroke", "#ef4444")
-        .attr("stroke-width", 3)
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 2)
         .attr("opacity", 0.8);
     
     function updateBoundary(epoch) {
@@ -317,8 +319,8 @@ function initLossVisualization() {
         .attr("x", width / 2)
         .attr("y", height - 10)
         .attr("text-anchor", "middle")
-        .style("font-size", "14px")
-        .style("fill", "#cbd5e0")
+        .style("font-size", "11px")
+        .style("fill", "#666")
         .text("Epoch");
     
     svg.append("text")
@@ -326,8 +328,8 @@ function initLossVisualization() {
         .attr("x", -height / 2)
         .attr("y", 20)
         .attr("text-anchor", "middle")
-        .style("font-size", "14px")
-        .style("fill", "#cbd5e0")
+        .style("font-size", "11px")
+        .style("fill", "#666")
         .text("Loss");
     
     const line = d3.line()
@@ -336,44 +338,44 @@ function initLossVisualization() {
     
     const trainPath = svg.append("path")
         .attr("fill", "none")
-        .attr("stroke", "#10b981")
-        .attr("stroke-width", 3);
+        .attr("stroke", "#888")
+        .attr("stroke-width", 2);
     
     const valPath = svg.append("path")
         .attr("fill", "none")
-        .attr("stroke", "#f59e0b")
-        .attr("stroke-width", 3);
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 2);
     
     const legend = svg.append("g")
         .attr("transform", `translate(${width - 110}, ${margin.top})`);
     
     legend.append("line")
         .attr("x1", 0).attr("x2", 30).attr("y1", 0).attr("y2", 0)
-        .attr("stroke", "#10b981").attr("stroke-width", 3);
+        .attr("stroke", "#888").attr("stroke-width", 2);
     
     legend.append("text")
         .attr("x", 35).attr("y", 4)
-        .style("fill", "#cbd5e0").style("font-size", "12px")
+        .style("fill", "#999").style("font-size", "11px")
         .text("Training");
     
     legend.append("line")
         .attr("x1", 0).attr("x2", 30).attr("y1", 20).attr("y2", 20)
-        .attr("stroke", "#f59e0b").attr("stroke-width", 3);
+        .attr("stroke", "#fff").attr("stroke-width", 2);
     
     legend.append("text")
         .attr("x", 35).attr("y", 24)
-        .style("fill", "#cbd5e0").style("font-size", "12px")
+        .style("fill", "#999").style("font-size", "11px")
         .text("Validation");
     
     const overfit = svg.append("text")
         .attr("x", xScale(60))
         .attr("y", yScale(0.8))
         .attr("text-anchor", "middle")
-        .style("font-size", "14px")
-        .style("font-weight", "bold")
-        .style("fill", "#ef4444")
+        .style("font-size", "12px")
+        .style("font-weight", "400")
+        .style("fill", "#fff")
         .style("opacity", 0)
-        .text("⚠ Overfitting!");
+        .text("Overfitting");
     
     function updateLossCurve(progress) {
         const currentEpoch = Math.floor(progress * 100);

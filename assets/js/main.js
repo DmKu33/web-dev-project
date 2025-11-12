@@ -420,8 +420,32 @@ function initLossVisualization() {
     handleScroll();
 }
 
+// Scroll-triggered reveal animations
+function initScrollAnimations() {
+    const sections = document.querySelectorAll('.demo-section');
+    
+    const observerOptions = {
+        root: null,
+        threshold: 0.15,
+        rootMargin: '0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+    
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     initGradientDescent();
     initBoundaryVisualization();
     initLossVisualization();
+    initScrollAnimations();
 });

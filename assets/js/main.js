@@ -82,6 +82,9 @@ function initGradientDescent() {
     let currentX = 4;
     let learningRate = 0.1;
     let animationInterval = null;
+    let initialCycleDone = false;
+    let initialAutoRunning = false;
+    let stepCount = 0;
     
     const currentPoint = gradContainer.append("circle")
         .attr("cx", xScale(currentX))
@@ -98,6 +101,18 @@ function initGradientDescent() {
         .attr("stroke-width", 1.5)
         .attr("stroke-dasharray", "4,4")
         .attr("opacity", 0.5);
+
+    const statusText = gradContainer.append("text")
+        .attr("x", width - 10)
+        .attr("y", margin.top + 10)
+        .attr("text-anchor", "end")
+        .style("font-size", "11px")
+        .style("fill", "#777");
+
+    function updateStatus() {
+        const loss = lossFunction(currentX).toFixed(2);
+        statusText.text(`step ${stepCount} · loss ${loss}`);
+    }
     
     function updateVisualization() {
         currentPoint
@@ -112,17 +127,21 @@ function initGradientDescent() {
         pathLine
             .datum(pathHistory)
             .attr("d", line);
+
+        updateStatus();
     }
     
     function gradientStep() {
         const gradient = derivative(currentX);
         currentX = currentX - learningRate * gradient;
         currentX = Math.max(-5, Math.min(5, currentX));
+        stepCount += 1;
         updateVisualization();
     }
     
     function reset() {
         currentX = 4;
+        stepCount = 0;
         pathHistory.length = 0;
         pathHistory.push({ x: currentX, y: lossFunction(currentX) });
         updateVisualization();
@@ -151,16 +170,52 @@ function initGradientDescent() {
         }
     }
     
+    function stopInitialGradientCycle() {
+        if (!initialAutoRunning) return;
+        initialAutoRunning = false;
+        initialCycleDone = true;
+    }
+
     d3.select("#learning-rate").on("input", function() {
+        if (initialAutoRunning) stopInitialGradientCycle();
         learningRate = +this.value;
         d3.select("#lr-value").text(learningRate.toFixed(2));
     });
     
-    d3.select("#reset-gradient").on("click", reset);
-    d3.select("#step-gradient").on("click", gradientStep);
-    d3.select("#animate-gradient").on("click", animate);
+    d3.select("#reset-gradient").on("click", function() {
+        if (initialAutoRunning) stopInitialGradientCycle();
+        reset();
+    });
+    d3.select("#step-gradient").on("click", function() {
+        if (initialAutoRunning) stopInitialGradientCycle();
+        gradientStep();
+    });
+    d3.select("#animate-gradient").on("click", function() {
+        if (initialAutoRunning) stopInitialGradientCycle();
+        animate();
+    });
 
-    // Trigger scanline reveal when the section becomes visible
+    // One automatic pass; user interaction cancels it
+    function runInitialGradientCycle() {
+        if (initialCycleDone || initialAutoRunning) return;
+        initialAutoRunning = true;
+        let steps = 0;
+        const maxSteps = 40;
+        function tick() {
+            if (!initialAutoRunning) return;
+            gradientStep();
+            steps += 1;
+            if (Math.abs(currentX) < 0.01 || steps >= maxSteps) {
+                initialCycleDone = true;
+                initialAutoRunning = false;
+                return;
+            }
+            setTimeout(tick, 300);
+        }
+        tick();
+    }
+
+    // Trigger scanline reveal and initial cycle when the section becomes visible
     const gradSection = document.querySelector('#gradient-viz')?.closest('.demo-section');
     if (gradSection) {
         let gradRevealed = false;
@@ -172,6 +227,8 @@ function initGradientDescent() {
                         .transition()
                         .duration(2000)
                         .attr("height", height);
+
+                    runInitialGradientCycle();
                 }
             });
         }, { threshold: 0.2 });
@@ -282,6 +339,16 @@ function initBoundaryVisualization() {
         .attr("stroke", "#fff")
         .attr("stroke-width", 2)
         .attr("opacity", 0.8);
+
+    let boundaryInitialDone = false;
+    let boundaryAutoRunning = false;
+
+    const epochLabel = boundContainer.append("text")
+        .attr("x", width - 10)
+        .attr("y", margin.top + 10)
+        .attr("text-anchor", "end")
+        .style("font-size", "11px")
+        .style("fill", "#777");
     
     function updateBoundary(epoch) {
         const { slope, intercept } = epochs[epoch];
@@ -296,17 +363,45 @@ function initBoundaryVisualization() {
             .attr("y1", yScale(y1))
             .attr("x2", xScale(x2))
             .attr("y2", yScale(y2));
+
+        epochLabel.text(`epoch ${epoch} / ${epochs.length - 1}`);
+        d3.select("#epoch-slider-value").text(epoch);
+        const slider = document.getElementById("epoch-slider");
+        if (slider) slider.value = String(epoch);
     }
     
     updateBoundary(0);
     
     d3.select("#epoch-slider").on("input", function() {
         const epoch = +this.value;
-        d3.select("#epoch-slider-value").text(epoch);
         updateBoundary(epoch);
+        if (boundaryAutoRunning && !boundaryInitialDone) {
+            boundaryAutoRunning = false;
+            boundaryInitialDone = true;
+        }
     });
 
-    // Trigger scanline reveal when the section becomes visible
+    // One automatic sweep of epochs; user input can interrupt
+    function runInitialBoundaryCycle() {
+        if (boundaryInitialDone || boundaryAutoRunning) return;
+        boundaryAutoRunning = true;
+        let epoch = 0;
+        const lastEpoch = epochs.length - 1;
+        function tick() {
+            if (!boundaryAutoRunning) return;
+            updateBoundary(epoch);
+            if (epoch >= lastEpoch) {
+                boundaryInitialDone = true;
+                boundaryAutoRunning = false;
+                return;
+            }
+            epoch += 1;
+            setTimeout(tick, 350);
+        }
+        tick();
+    }
+
+    // Trigger scanline reveal and initial sweep when the section becomes visible
     const boundSection = document.querySelector('#boundary-viz')?.closest('.demo-section');
     if (boundSection) {
         let boundRevealed = false;
@@ -318,6 +413,8 @@ function initBoundaryVisualization() {
                         .transition()
                         .duration(2000)
                         .attr("height", height);
+
+                    runInitialBoundaryCycle();
                 }
             });
         }, { threshold: 0.2 });

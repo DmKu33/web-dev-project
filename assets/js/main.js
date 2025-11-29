@@ -611,7 +611,7 @@ function initScrollAnimations() {
     const sections = document.querySelectorAll('.demo-section');
 
     // Typewriter effect for headings and body text
-    function typeText(element, speed) {
+    function typeText(element, speed, done) {
         if (!element) return;
         const full = element.textContent;
         element.textContent = "";
@@ -621,10 +621,20 @@ function initScrollAnimations() {
                 element.textContent = full.slice(0, index);
                 index += 1;
                 setTimeout(step, speed);
+            } else if (typeof done === "function") {
+                done();
             }
         }
         step();
     }
+
+    // Hide controls until text finishes typing
+    sections.forEach(section => {
+        const controls = section.querySelector('.controls');
+        if (controls) {
+            controls.classList.add('delayed-hidden');
+        }
+    });
 
     const observerOptions = {
         root: null,
@@ -644,13 +654,30 @@ function initScrollAnimations() {
                     textContainer.dataset.typed = "true";
                     const heading = textContainer.querySelector('h2');
                     const paragraph = textContainer.querySelector('p');
+                    const controls = section.querySelector('.controls');
 
                     // Slightly slower heading, a bit faster body text
                     if (heading) {
-                        typeText(heading, 45);
-                    }
-                    if (paragraph) {
-                        setTimeout(() => typeText(paragraph, 22), 400);
+                        typeText(heading, 45, () => {
+                            if (paragraph) {
+                                typeText(paragraph, 22, () => {
+                                    if (controls) {
+                                        controls.classList.remove('delayed-hidden');
+                                        controls.classList.add('delayed-shown');
+                                    }
+                                });
+                            } else if (controls) {
+                                controls.classList.remove('delayed-hidden');
+                                controls.classList.add('delayed-shown');
+                            }
+                        });
+                    } else if (paragraph) {
+                        typeText(paragraph, 22, () => {
+                            if (controls) {
+                                controls.classList.remove('delayed-hidden');
+                                controls.classList.add('delayed-shown');
+                            }
+                        });
                     }
                 }
             }

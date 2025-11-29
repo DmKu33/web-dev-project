@@ -9,6 +9,20 @@ function initGradientDescent() {
         .append("svg")
         .attr("width", width)
         .attr("height", height);
+
+    // Clip-based reveal for gradient descent chart
+    const gradDefs = svg.append("defs");
+    const gradClipPath = gradDefs.append("clipPath")
+        .attr("id", "gradient-clip");
+
+    const gradClipRect = gradClipPath.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", width)
+        .attr("height", 0);
+
+    const gradContainer = svg.append("g")
+        .attr("clip-path", "url(#gradient-clip)");
     
     const xScale = d3.scaleLinear()
         .domain([-5, 5])
@@ -31,24 +45,24 @@ function initGradientDescent() {
         .x(d => xScale(d.x))
         .y(d => yScale(d.y));
     
-    svg.append("path")
+    gradContainer.append("path")
         .datum(curveData)
         .attr("d", line)
         .attr("fill", "none")
         .attr("stroke", "#444")
         .attr("stroke-width", 2);
     
-    svg.append("g")
+    gradContainer.append("g")
         .attr("class", "axis")
         .attr("transform", `translate(0,${height - margin.bottom})`)
         .call(d3.axisBottom(xScale));
     
-    svg.append("g")
+    gradContainer.append("g")
         .attr("class", "axis")
         .attr("transform", `translate(${margin.left},0)`)
         .call(d3.axisLeft(yScale));
     
-    svg.append("text")
+    gradContainer.append("text")
         .attr("x", width / 2)
         .attr("y", height - 5)
         .attr("text-anchor", "middle")
@@ -56,7 +70,7 @@ function initGradientDescent() {
         .style("fill", "#666")
         .text("Parameter (θ)");
     
-    svg.append("text")
+    gradContainer.append("text")
         .attr("transform", "rotate(-90)")
         .attr("x", -height / 2)
         .attr("y", 15)
@@ -69,7 +83,7 @@ function initGradientDescent() {
     let learningRate = 0.1;
     let animationInterval = null;
     
-    const currentPoint = svg.append("circle")
+    const currentPoint = gradContainer.append("circle")
         .attr("cx", xScale(currentX))
         .attr("cy", yScale(lossFunction(currentX)))
         .attr("r", 6)
@@ -78,7 +92,7 @@ function initGradientDescent() {
         .attr("stroke-width", 2);
     
     const pathHistory = [{ x: currentX, y: lossFunction(currentX) }];
-    const pathLine = svg.append("path")
+    const pathLine = gradContainer.append("path")
         .attr("fill", "none")
         .attr("stroke", "#666")
         .attr("stroke-width", 1.5)
@@ -145,6 +159,24 @@ function initGradientDescent() {
     d3.select("#reset-gradient").on("click", reset);
     d3.select("#step-gradient").on("click", gradientStep);
     d3.select("#animate-gradient").on("click", animate);
+
+    // Trigger scanline reveal when the section becomes visible
+    const gradSection = document.querySelector('#gradient-viz')?.closest('.demo-section');
+    if (gradSection) {
+        let gradRevealed = false;
+        const gradObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !gradRevealed) {
+                    gradRevealed = true;
+                    gradClipRect
+                        .transition()
+                        .duration(2000)
+                        .attr("height", height);
+                }
+            });
+        }, { threshold: 0.2 });
+        gradObserver.observe(gradSection);
+    }
 }
 
 
@@ -160,6 +192,20 @@ function initBoundaryVisualization() {
         .append("svg")
         .attr("width", width)
         .attr("height", height);
+
+    // Clip-based reveal for decision boundary chart
+    const boundDefs = svg.append("defs");
+    const boundClipPath = boundDefs.append("clipPath")
+        .attr("id", "boundary-clip");
+
+    const boundClipRect = boundClipPath.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", width)
+        .attr("height", 0);
+
+    const boundContainer = svg.append("g")
+        .attr("clip-path", "url(#boundary-clip)");
     
     const xScale = d3.scaleLinear()
         .domain([0, 10])
@@ -178,17 +224,17 @@ function initBoundaryVisualization() {
         data.push({ x: Math.random() * 3 + 6, y: Math.random() * 3 + 6, class: 1 });
     }
     
-    svg.append("g")
+    boundContainer.append("g")
         .attr("class", "axis")
         .attr("transform", `translate(0,${height - margin.bottom})`)
         .call(d3.axisBottom(xScale));
     
-    svg.append("g")
+    boundContainer.append("g")
         .attr("class", "axis")
         .attr("transform", `translate(${margin.left},0)`)
         .call(d3.axisLeft(yScale));
     
-    svg.append("text")
+    boundContainer.append("text")
         .attr("x", width / 2)
         .attr("y", height - 5)
         .attr("text-anchor", "middle")
@@ -196,7 +242,7 @@ function initBoundaryVisualization() {
         .style("fill", "#666")
         .text("Feature 1");
     
-    svg.append("text")
+    boundContainer.append("text")
         .attr("transform", "rotate(-90)")
         .attr("x", -height / 2)
         .attr("y", 15)
@@ -205,7 +251,7 @@ function initBoundaryVisualization() {
         .style("fill", "#666")
         .text("Feature 2");
     
-    svg.selectAll(".data-point")
+    boundContainer.selectAll(".data-point")
         .data(data)
         .enter()
         .append("circle")
@@ -232,7 +278,7 @@ function initBoundaryVisualization() {
         { slope: 1.0, intercept: 7 }
     ];
     
-    const boundaryLine = svg.append("line")
+    const boundaryLine = boundContainer.append("line")
         .attr("stroke", "#fff")
         .attr("stroke-width", 2)
         .attr("opacity", 0.8);
@@ -259,6 +305,24 @@ function initBoundaryVisualization() {
         d3.select("#epoch-slider-value").text(epoch);
         updateBoundary(epoch);
     });
+
+    // Trigger scanline reveal when the section becomes visible
+    const boundSection = document.querySelector('#boundary-viz')?.closest('.demo-section');
+    if (boundSection) {
+        let boundRevealed = false;
+        const boundObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !boundRevealed) {
+                    boundRevealed = true;
+                    boundClipRect
+                        .transition()
+                        .duration(2000)
+                        .attr("height", height);
+                }
+            });
+        }, { threshold: 0.2 });
+        boundObserver.observe(boundSection);
+    }
 }
 
 
@@ -269,11 +333,25 @@ function initLossVisualization() {
     const width = 700;
     const height = 500;
     const margin = { top: 40, right: 120, bottom: 50, left: 60 };
-    
+
     const svg = d3.select("#loss-viz")
         .append("svg")
         .attr("width", width)
         .attr("height", height);
+
+    // Clip-based reveal for loss chart
+    const defs = svg.append("defs");
+    const clipPath = defs.append("clipPath")
+        .attr("id", "loss-clip");
+
+    const clipRect = clipPath.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", width)
+        .attr("height", 0);
+
+    const container = svg.append("g")
+        .attr("clip-path", "url(#loss-clip)");
     
     const xScale = d3.scaleLinear()
         .domain([0, 100])
@@ -283,7 +361,6 @@ function initLossVisualization() {
         .domain([0, 1.5])
         .range([height - margin.bottom, margin.top]);
     
-    // Training loss keeps decreasing, validation starts increasing after epoch 40
     const epochs = d3.range(0, 101);
     const trainingLoss = epochs.map(e => ({
         epoch: e,
@@ -295,27 +372,27 @@ function initLossVisualization() {
         loss: e < 40 ? 1.3 * Math.exp(-0.035 * e) + 0.08 : 0.25 + 0.008 * (e - 40)
     }));
     
-    svg.append("g")
+    container.append("g")
         .attr("class", "axis")
         .attr("transform", `translate(0,${height - margin.bottom})`)
         .call(d3.axisBottom(xScale));
     
-    svg.append("g")
+    container.append("g")
         .attr("class", "axis")
         .attr("transform", `translate(${margin.left},0)`)
         .call(d3.axisLeft(yScale));
     
-    svg.append("g")
+    container.append("g")
         .attr("class", "grid")
         .attr("transform", `translate(0,${height - margin.bottom})`)
         .call(d3.axisBottom(xScale).tickSize(-height + margin.top + margin.bottom).tickFormat(""));
     
-    svg.append("g")
+    container.append("g")
         .attr("class", "grid")
         .attr("transform", `translate(${margin.left},0)`)
         .call(d3.axisLeft(yScale).tickSize(-width + margin.left + margin.right).tickFormat(""));
     
-    svg.append("text")
+    container.append("text")
         .attr("x", width / 2)
         .attr("y", height - 10)
         .attr("text-anchor", "middle")
@@ -323,7 +400,7 @@ function initLossVisualization() {
         .style("fill", "#666")
         .text("Epoch");
     
-    svg.append("text")
+    container.append("text")
         .attr("transform", "rotate(-90)")
         .attr("x", -height / 2)
         .attr("y", 20)
@@ -336,17 +413,17 @@ function initLossVisualization() {
         .x(d => xScale(d.epoch))
         .y(d => yScale(d.loss));
     
-    const trainPath = svg.append("path")
+    const trainPath = container.append("path")
         .attr("fill", "none")
         .attr("stroke", "#888")
         .attr("stroke-width", 2);
     
-    const valPath = svg.append("path")
+    const valPath = container.append("path")
         .attr("fill", "none")
         .attr("stroke", "#fff")
         .attr("stroke-width", 2);
     
-    const legend = svg.append("g")
+    const legend = container.append("g")
         .attr("transform", `translate(${width - 110}, ${margin.top})`);
     
     legend.append("line")
@@ -367,7 +444,7 @@ function initLossVisualization() {
         .style("fill", "#999").style("font-size", "11px")
         .text("Validation");
     
-    const overfit = svg.append("text")
+    const overfit = container.append("text")
         .attr("x", xScale(60))
         .attr("y", yScale(0.8))
         .attr("text-anchor", "middle")
@@ -396,10 +473,20 @@ function initLossVisualization() {
     // Only animate when this section is actually visible
     const scrollSection = document.querySelector(".scroll-section");
     let isVisible = false;
+    let hasRevealed = false;
     
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             isVisible = entry.isIntersecting;
+
+            // Trigger the scanline-style reveal once when the section first becomes visible
+            if (entry.isIntersecting && !hasRevealed) {
+                hasRevealed = true;
+                clipRect
+                    .transition()
+                    .duration(2000)
+                    .attr("height", height);
+            }
         });
     }, { threshold: 0.1 });
     
@@ -425,7 +512,23 @@ function initLossVisualization() {
 // Scroll-triggered reveal animations
 function initScrollAnimations() {
     const sections = document.querySelectorAll('.demo-section');
-    
+
+    // Typewriter effect for headings and body text
+    function typeText(element, speed) {
+        if (!element) return;
+        const full = element.textContent;
+        element.textContent = "";
+        let index = 0;
+        function step() {
+            if (index <= full.length) {
+                element.textContent = full.slice(0, index);
+                index += 1;
+                setTimeout(step, speed);
+            }
+        }
+        step();
+    }
+
     const observerOptions = {
         root: null,
         threshold: 0.15,
@@ -435,7 +538,24 @@ function initScrollAnimations() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
+                const section = entry.target;
+                section.classList.add('visible');
+
+                // Trigger typewriter text once per section
+                const textContainer = section.querySelector('.demo-text');
+                if (textContainer && !textContainer.dataset.typed) {
+                    textContainer.dataset.typed = "true";
+                    const heading = textContainer.querySelector('h2');
+                    const paragraph = textContainer.querySelector('p');
+
+                    // Slightly slower heading, a bit faster body text
+                    if (heading) {
+                        typeText(heading, 45);
+                    }
+                    if (paragraph) {
+                        setTimeout(() => typeText(paragraph, 22), 400);
+                    }
+                }
             }
         });
     }, observerOptions);

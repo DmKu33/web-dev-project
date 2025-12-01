@@ -90,6 +90,63 @@ header p {
     transform: translateX(0);
 }
 
+/* Expandable Detailed Explanation */
+.expand-btn {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    background: transparent;
+    border: 1px solid #333;
+    color: #999;
+    padding: 0.7rem 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.9rem;
+    font-weight: 300;
+    transition: all 0.2s;
+    border-radius: 3px;
+    width: fit-content;
+}
+
+.expand-btn:hover {
+    border-color: #555;
+    color: #fff;
+}
+
+.expand-btn .icon {
+    transition: transform 0.3s ease;
+    font-size: 0.8rem;
+}
+
+.expand-btn.expanded .icon {
+    transform: rotate(180deg);
+}
+
+.detailed-content {
+    display: none;
+    border-left: 2px solid #222;
+    padding-left: 1.5rem;
+    padding-top: 0.5rem;
+    margin-top: 1rem;
+}
+
+.detailed-content.visible {
+    display: block;
+}
+
+.detailed-content p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #aaa;
+    margin-bottom: 1rem;
+}
+
+.detailed-content strong {
+    color: #fff;
+    font-weight: 400;
+}
+
 /* Controls */
 .controls {
     display: flex;
@@ -103,14 +160,11 @@ header p {
 }
 
 .controls.delayed-hidden {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.6s ease-out;
+    display: none;
 }
 
 .controls.delayed-shown {
-    opacity: 1;
-    pointer-events: auto;
+    display: flex;
 }
 
 .controls label {
@@ -164,8 +218,18 @@ button:active {
 }
 
 /* Visualizations */
-#gradient-viz, #boundary-viz, #loss-viz {
+#gradient-viz, #boundary-viz, #optimizer-viz, #loss-viz {
     margin: 0 auto;
+}
+
+#bias-variance-viz {
+    margin: 0 auto;
+}
+
+/* Bias-Variance section special layout */
+.bias-variance-section {
+    min-height: auto;
+    padding: 6rem 4rem;
 }
 
 /* Scroll section - sticky layout */
@@ -200,14 +264,96 @@ button:active {
     height: 100vh;
 }
 
+/* References Section */
+.references-section {
+    background: #0a0a0a;
+    border-top: 1px solid #222;
+    padding: 6rem 4rem;
+}
+
+.references-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.references-container h2 {
+    font-size: 2rem;
+    font-weight: 300;
+    margin-bottom: 3rem;
+    color: #ffffff;
+    text-align: center;
+    letter-spacing: -0.5px;
+}
+
+.references-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.reference-item h3 {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #fff;
+    margin-bottom: 1rem;
+    letter-spacing: -0.3px;
+}
+
+.reference-item ul {
+    list-style: none;
+    padding: 0;
+}
+
+.reference-item li {
+    color: #999;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    padding-left: 1rem;
+    position: relative;
+    font-weight: 300;
+}
+
+.reference-item li:before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #666;
+}
+
+.references-citation {
+    border-top: 1px solid #1a1a1a;
+    padding-top: 2rem;
+    margin-top: 2rem;
+}
+
+.references-citation strong {
+    color: #fff;
+    font-weight: 400;
+}
+
+.citation {
+    color: #777;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0.5rem 0;
+    font-weight: 300;
+}
+
+.citation em {
+    font-style: italic;
+    color: #888;
+}
+
 /* Footer */
 footer {
     background: #000;
     color: #666;
     text-align: center;
-    padding: 3rem;
+    padding: 2rem;
     border-top: 1px solid #222;
     font-weight: 300;
+    font-size: 0.9rem;
 }
 
 /* SVG axis styling for minimal look */
@@ -264,5 +410,14 @@ text {
     
     .scroll-section {
         grid-template-columns: 1fr;
+    }
+    
+    .references-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .references-section {
+        padding: 4rem 2rem;
     }
 }

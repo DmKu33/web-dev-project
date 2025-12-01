@@ -10,45 +10,28 @@
 
 <body>
     <header>
-        <h1>ML Training Dynamics - Prototype</h1>
-        <p>Two interaction patterns for visualizing machine learning concepts</p>
+        <h1>Machine Learning Training Dynamics</h1>
+        <p>Five interactive visualizations exploring optimization, generalization, and model behavior</p>
     </header>
 
-    <!-- DEMO 1 -->
-    <section class="demo-section">
-        <div class="demo-text">
-            <h2>Gradient Descent</h2>
-            <p>Watch an optimization algorithm find the minimum of a loss function. The learning rate controls how big each step is—too small and it takes forever, too large and it might overshoot.</p>
-            
-            <div class="controls" id="gradient-controls">
-                <div>
-                    <label for="learning-rate">Learning Rate: <span id="lr-value">0.1</span></label>
-                    <input type="range" id="learning-rate" min="0.01" max="0.5" step="0.01" value="0.1">
-                </div>
-                <div>
-                    <button id="reset-gradient">Reset</button>
-                    <button id="step-gradient">Step</button>
-                    <button id="animate-gradient">Animate</button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="demo-viz">
-            <div id="gradient-viz"></div>
-        </div>
-    </section>
-
-    <!-- DEMO 2 -->
+    <!-- DEMO 1: DECISION BOUNDARIES -->
     <section class="demo-section">
         <div class="demo-text">
             <h2>Decision Boundaries</h2>
-            <p>Neural networks learn to separate classes by finding decision boundaries. Slide through training epochs to watch the boundary shift from a random guess to cleanly separating blue and orange clusters.</p>
+            <p>Neural networks learn to separate classes by finding decision boundaries. Watch the boundary evolve from a poor initial guess to a circular shape that cleanly separates the inner and outer clusters.</p>
             
             <div class="controls" id="boundary-controls">
                 <div>
                     <label for="epoch-slider">Epoch: <span id="epoch-slider-value">0</span></label>
-                    <input type="range" id="epoch-slider" min="0" max="10" step="1" value="0">
+                    <input type="range" id="epoch-slider" min="0" max="50" step="1" value="0">
                 </div>
+            </div>
+            
+            <button class="expand-btn">
+                <span class="icon">▼</span> Detailed Explanation
+            </button>
+            <div class="detailed-content">
+                <p>The model learns a circular boundary that separates two concentric clusters. Early epochs show a small elliptical boundary. Later epochs reveal the circular shape needed to fit the data. Neural networks with hidden layers can learn circular and other complex decision boundaries by learning nonlinear transformations of the input features.</p>
             </div>
         </div>
         
@@ -57,12 +40,20 @@
         </div>
     </section>
 
-    <!-- DEMO 3 -->
+    <!-- DEMO 2: LOSS CURVES -->
     <section class="demo-section scroll-section">
         <div class="demo-text sticky-text">
-            <h2>The Overfitting Problem</h2>
-            <p>Training loss keeps dropping, but validation loss? It starts climbing back up. This is overfitting - the model memorizes training data instead of learning patterns. Scroll to watch it happen.</p>
+            <h2>Loss Curves and Overfitting</h2>
+            <p>Training loss keeps dropping, but validation loss starts climbing back up. This is overfitting. The model memorizes training data instead of learning patterns. Scroll to watch it happen.</p>
+            
             <div class="scroll-progress">Scroll to progress through 100 epochs</div>
+            
+            <button class="expand-btn">
+                <span class="icon">▼</span> Detailed Explanation
+            </button>
+            <div class="detailed-content">
+                <p>Around epoch 40, validation loss stops improving and starts increasing while training loss continues to drop. This gap signals overfitting. The model becomes too specialized to training data quirks and noise, losing its ability to generalize to new examples. Solutions include early stopping (halt training when validation loss increases), regularization, dropout, or gathering more training data. The shaded regions show variance across different training runs.</p>
+            </div>
         </div>
         
         <div class="demo-viz sticky-viz">
@@ -73,8 +64,119 @@
         <div class="scroll-spacer"></div>
     </section>
 
+    <!-- DEMO 3: OPTIMIZER COMPARISON -->
+    <section class="demo-section">
+        <div class="demo-text">
+            <h2>Optimizer Comparison</h2>
+            <p>Different optimizers take different paths down the same loss surface. Watch SGD, Momentum, and Adam navigate a 2D landscape. Each has unique strengths and trade-offs.</p>
+            
+            <div class="controls">
+                <div>
+                    <button id="reset-optimizers">Reset</button>
+                    <button id="play-optimizers">Play</button>
+                    <button id="step-optimizers">Step</button>
+                </div>
+            </div>
+            
+            <button class="expand-btn">
+                <span class="icon">▼</span> Detailed Explanation
+            </button>
+            <div class="detailed-content">
+                <p>SGD takes direct steps opposite to the gradient. Simple but can be slow and gets stuck in valleys. Momentum accumulates velocity from previous steps, helping it roll through flat regions and escape shallow minima faster. Adam adapts the learning rate per parameter using momentum and second-moment estimates. Generally faster and more robust, but uses more memory. There is no universally best optimizer. Choice depends on your problem, data, and computational constraints.</p>
+            </div>
+        </div>
+        
+        <div class="demo-viz">
+            <div id="optimizer-viz"></div>
+        </div>
+    </section>
+
+    <!-- DEMO 4: BIAS-VARIANCE TRADEOFF -->
+    <section class="demo-section bias-variance-section">
+        <div class="demo-text">
+            <h2>Bias-Variance Tradeoff</h2>
+            <p>Model complexity determines whether you underfit, overfit, or find the sweet spot. These four scenarios show the classic tradeoff in action with polynomial regression.</p>
+            
+            <button class="expand-btn">
+                <span class="icon">▼</span> Detailed Explanation
+            </button>
+            <div class="detailed-content">
+                <p>Top-left shows just-right model complexity. Fits training data well and generalizes to test data. Top-right is overfit (too complex). Perfect on training data but terrible on test data due to learning noise. Bottom-left is underfit (too simple). Poor fit on both training and test data due to inability to capture the pattern. Bottom-right is worst case (wrong model plus noisy data). Erratic predictions, unstable across datasets.</p>
+            </div>
+        </div>
+        
+        <div class="demo-viz">
+            <div id="bias-variance-viz"></div>
+        </div>
+    </section>
+
+    <!-- DEMO 5: FEATURE SPACE EVOLUTION -->
+    <section class="demo-section">
+        <div class="demo-text">
+            <h2>Feature Space Evolution</h2>
+            <p>Watch how a neural network learns to separate classes in feature space. As training progresses, initially mixed clusters gradually separate into distinct groups.</p>
+            
+            <div class="controls">
+                <div>
+                    <label for="feature-epoch-slider">Epoch: <span id="feature-epoch-value">0</span></label>
+                    <input type="range" id="feature-epoch-slider" min="0" max="30" step="1" value="0">
+                </div>
+            </div>
+            
+            <button class="expand-btn">
+                <span class="icon">▼</span> Detailed Explanation
+            </button>
+            <div class="detailed-content">
+                <p>This shows a 2D projection of the network's internal representations. Each point is a data sample, colored by its true class. Early epochs show random and mixed features. The network has not learned meaningful representations yet. Later epochs show classes separating into distinct clusters as the network learns discriminative features. Good feature representations are the foundation of classification. This visualization shows the network learning to see the differences between classes.</p>
+            </div>
+        </div>
+        
+        <div class="demo-viz">
+            <div id="feature-viz"></div>
+        </div>
+    </section>
+
+    <!-- REFERENCES -->
+    <section class="references-section">
+        <div class="references-container">
+            <h2>References & Data Sources</h2>
+            <div class="references-grid">
+                <div class="reference-item">
+                    <h3>Datasets</h3>
+                    <ul>
+                        <li>Scikit-learn make_circles dataset (Pedregosa et al., 2011)</li>
+                        <li>Quadratic loss surface for optimizer comparison</li>
+                        <li>Synthetic sine wave data for bias-variance demonstration</li>
+                    </ul>
+                </div>
+                <div class="reference-item">
+                    <h3>Concepts</h3>
+                    <ul>
+                        <li>Gradient Descent Optimization (Ruder, 2016)</li>
+                        <li>Bias-Variance Tradeoff (Hastie et al., 2009)</li>
+                        <li>Neural Network Decision Boundaries (Goodfellow et al., 2016)</li>
+                        <li>Feature Learning & Representation (Bengio et al., 2013)</li>
+                    </ul>
+                </div>
+                <div class="reference-item">
+                    <h3>Libraries</h3>
+                    <ul>
+                        <li>D3.js v7 for interactive visualizations</li>
+                        <li>NumPy & Scikit-learn for data generation</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="references-citation">
+                <p><strong>Key References:</strong></p>
+                <p class="citation">Pedregosa et al. (2011). Scikit-learn: Machine Learning in Python. <em>JMLR 12</em>, pp. 2825-2830.</p>
+                <p class="citation">Goodfellow, Bengio & Courville (2016). <em>Deep Learning</em>. MIT Press.</p>
+                <p class="citation">Ruder, S. (2016). An overview of gradient descent optimization algorithms. <em>arXiv:1609.04747</em>.</p>
+            </div>
+        </div>
+    </section>
+
     <footer>
-        <p>Prototype for interactive ML visualization</p>
+        <p>Interactive ML Visualization Prototype · Built with D3.js</p>
     </footer>
 
     <script src="assets/js/main.js"></script>

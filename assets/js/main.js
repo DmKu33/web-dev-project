@@ -1169,6 +1169,19 @@ function initScrollAnimations() {
         step();
     }
 
+    // Reserve space for full text so typewriter animation doesn't shift layout
+    const demoTextBlocks = document.querySelectorAll('.demo-text');
+    demoTextBlocks.forEach(block => {
+        // Only measure once per block
+        if (!block.dataset.minHeightSet) {
+            const currentHeight = block.offsetHeight;
+            if (currentHeight > 0) {
+                block.style.minHeight = `${currentHeight}px`;
+                block.dataset.minHeightSet = "true";
+            }
+        }
+    });
+
     // Cache text for the typewriter effect (but leave .detailed-content alone)
     const textElements = document.querySelectorAll('.demo-text > h2, .demo-text > p');
     textElements.forEach(el => {

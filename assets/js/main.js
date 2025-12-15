@@ -761,7 +761,7 @@ function initBiasVarianceGrid() {
 }
 
 
-// DEMO 5: Feature space evolution — classes separating over epochs
+// DEMO 5: Feature space evolution - classes separating over epochs
 
 function initFeatureSpaceEvolution() {
     const width = 700;

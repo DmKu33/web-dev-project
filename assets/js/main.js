@@ -49,8 +49,8 @@ function initGradientDescent() {
         .datum(curveData)
         .attr("d", line)
         .attr("fill", "none")
-        .attr("stroke", "#444")
-        .attr("stroke-width", 2);
+        .attr("stroke", "#666")
+        .attr("stroke-width", 2.5);
     
     gradContainer.append("g")
         .attr("class", "axis")
@@ -67,7 +67,7 @@ function initGradientDescent() {
         .attr("y", height - 5)
         .attr("text-anchor", "middle")
         .style("font-size", "11px")
-        .style("fill", "#666")
+        .style("fill", "#999")
         .text("Parameter (θ)");
     
     gradContainer.append("text")
@@ -76,7 +76,7 @@ function initGradientDescent() {
         .attr("y", 15)
         .attr("text-anchor", "middle")
         .style("font-size", "11px")
-        .style("fill", "#666")
+        .style("fill", "#999")
         .text("Loss");
     
     let currentX = 4;
@@ -97,17 +97,17 @@ function initGradientDescent() {
     const pathHistory = [{ x: currentX, y: lossFunction(currentX) }];
     const pathLine = gradContainer.append("path")
         .attr("fill", "none")
-        .attr("stroke", "#666")
-        .attr("stroke-width", 1.5)
+        .attr("stroke", "#999")
+        .attr("stroke-width", 2)
         .attr("stroke-dasharray", "4,4")
-        .attr("opacity", 0.5);
+        .attr("opacity", 0.6);
 
     const statusText = gradContainer.append("text")
         .attr("x", width - 10)
         .attr("y", margin.top + 15)
         .attr("text-anchor", "end")
         .style("font-size", "14px")
-        .style("fill", "#999")
+        .style("fill", "#b0b0b0")
         .style("font-weight", "400");
 
     function updateStatus() {
@@ -240,7 +240,6 @@ function initGradientDescent() {
 
 // DEMO 2: Decision boundary slider on a concentric-rings dataset
 
-
 function initBoundaryVisualization() {
     const width = 700;
     const height = 500;
@@ -335,9 +334,9 @@ function initBoundaryVisualization() {
         .attr("cx", d => xScale(d.x))
         .attr("cy", d => yScale(d.y))
         .attr("r", 5)
-        .attr("fill", d => d.class === 0 ? "#555" : "#aaa")
-        .attr("opacity", 0.7)
-        .attr("stroke", d => d.class === 0 ? "#333" : "#888")
+        .attr("fill", d => d.class === 0 ? "#666" : "#bbb")
+        .attr("opacity", 0.75)
+        .attr("stroke", d => d.class === 0 ? "#444" : "#999")
         .attr("stroke-width", 1.5);
     
     // Pre-baked boundary shapes for epochs 0–50, growing from tiny ellipse to near-perfect circle
@@ -373,7 +372,7 @@ function initBoundaryVisualization() {
         .attr("y", margin.top + 15)
         .attr("text-anchor", "end")
         .style("font-size", "14px")
-        .style("fill", "#999")
+        .style("fill", "#b0b0b0")
         .style("font-weight", "400");
     
     const accuracyLabel = boundContainer.append("text")
@@ -381,7 +380,7 @@ function initBoundaryVisualization() {
         .attr("y", margin.top + 35)
         .attr("text-anchor", "end")
         .style("font-size", "12px")
-        .style("fill", "#777");
+        .style("fill", "#999");
     
     const boundaryGenerator = d3.line()
         .x(d => xScale(d.x))
@@ -507,8 +506,9 @@ function initOptimizerComparison() {
             .attr("cy", yScale(0))
             .attr("r", xScale(radius) - xScale(0))
             .attr("fill", "none")
-            .attr("stroke", "#222")
-            .attr("stroke-width", 1);
+            .attr("stroke", "#444")
+            .attr("stroke-width", 1)
+            .attr("opacity", 0.6);
     });
     
     optContainer.append("g").attr("class", "axis")
@@ -520,9 +520,8 @@ function initOptimizerComparison() {
     
     // All optimizers start from the same point so their paths are comparable
     const optimizers = [
-        { name: "SGD", color: "#999", x: -1.5, y: 1.2, vx: 0, vy: 0, path: [{x: -1.5, y: 1.2}], lr: 0.08 },
-        { name: "Momentum", color: "#ccc", x: -1.5, y: 1.2, vx: 0, vy: 0, path: [{x: -1.5, y: 1.2}], lr: 0.08, beta: 0.85 },
-        { name: "Adam", color: "#fff", x: -1.5, y: 1.2, m_x: 0, m_y: 0, v_x: 0, v_y: 0, path: [{x: -1.5, y: 1.2}], lr: 0.25, beta1: 0.9, beta2: 0.999, eps: 1e-8, t: 0 }
+        { name: "SGD", color: "#aaa", x: -1.5, y: 1.2, vx: 0, vy: 0, path: [{x: -1.5, y: 1.2}], lr: 0.08, dashArray: "8,4" },
+        { name: "Adam", color: "#fff", x: -1.5, y: 1.2, m_x: 0, m_y: 0, v_x: 0, v_y: 0, path: [{x: -1.5, y: 1.2}], lr: 0.25, beta1: 0.9, beta2: 0.999, eps: 1e-8, t: 0, dashArray: "none" }
     ];
     
     const line = d3.line().x(d => xScale(d.x)).y(d => yScale(d.y));
@@ -531,8 +530,9 @@ function initOptimizerComparison() {
         opt.pathLine = optContainer.append("path")
             .attr("fill", "none")
             .attr("stroke", opt.color)
-            .attr("stroke-width", 2)
-            .attr("opacity", 0.6);
+            .attr("stroke-width", 2.5)
+            .attr("stroke-dasharray", opt.dashArray)
+            .attr("opacity", 0.8);
         opt.point = optContainer.append("circle")
             .attr("cx", xScale(opt.x))
             .attr("cy", yScale(opt.y))
@@ -544,12 +544,14 @@ function initOptimizerComparison() {
     
     const legend = optContainer.append("g").attr("transform", `translate(${width - 100}, ${margin.top + 10})`);
     optimizers.forEach((opt, i) => {
-        legend.append("circle")
-            .attr("cx", 0).attr("cy", i * 20).attr("r", 5)
-            .attr("fill", opt.color).attr("stroke", "#000").attr("stroke-width", 1.5);
+        // Show line style in legend instead of circle
+        legend.append("line")
+            .attr("x1", 0).attr("x2", 25).attr("y1", i * 22).attr("y2", i * 22)
+            .attr("stroke", opt.color).attr("stroke-width", 2.5)
+            .attr("stroke-dasharray", opt.dashArray);
         legend.append("text")
-            .attr("x", 10).attr("y", i * 20 + 4)
-            .style("font-size", "12px").style("fill", "#999")
+            .attr("x", 30).attr("y", i * 22 + 4)
+            .style("font-size", "12px").style("fill", "#b0b0b0")
             .text(opt.name);
     });
     
@@ -561,11 +563,6 @@ function initOptimizerComparison() {
             if (opt.name === "SGD") {
                 opt.x -= opt.lr * gx;
                 opt.y -= opt.lr * gy;
-            } else if (opt.name === "Momentum") {
-                opt.vx = opt.beta * opt.vx - opt.lr * gx;
-                opt.vy = opt.beta * opt.vy - opt.lr * gy;
-                opt.x += opt.vx;
-                opt.y += opt.vy;
             } else if (opt.name === "Adam") {
                 opt.t += 1;
                 opt.m_x = opt.beta1 * opt.m_x + (1 - opt.beta1) * gx;
@@ -713,7 +710,7 @@ function initBiasVarianceGrid() {
         panel.append("path")
             .datum(trueLine)
             .attr("d", d3.line().x(d => xScale(d.x)).y(d => yScale(d.y)))
-            .attr("fill", "none").attr("stroke", "#555").attr("stroke-width", 1.5)
+            .attr("fill", "none").attr("stroke", "#777").attr("stroke-width", 1.5)
             .attr("stroke-dasharray", "4,4");
         
         // Scatter the (slightly jittered) training samples
@@ -723,8 +720,8 @@ function initBiasVarianceGrid() {
             .attr("cx", d => xScale(d.x))
             .attr("cy", d => yScale(d.y + (Math.random() - 0.5) * scenario.noise))
             .attr("r", 3)
-            .attr("fill", "#888")
-            .attr("opacity", 0.6);
+            .attr("fill", "#aaa")
+            .attr("opacity", 0.7);
         
         // Sketch of the fitted model for this scenario (not a real solver)
         const fittedLine = d3.range(-Math.PI, Math.PI, 0.1).map(x => {
@@ -746,15 +743,6 @@ function initBiasVarianceGrid() {
             .attr("d", d3.line().x(d => xScale(d.x)).y(d => yScale(d.y)))
             .attr("fill", "none").attr("stroke", "#fff").attr("stroke-width", 2.5);
         
-        // Quick-and-dirty train / test errors just to label each corner
-        const trainError = scenario.degree === 1 ? "0.45" : scenario.degree === 3 ? "0.12" : scenario.degree === 8 ? "0.35" : "0.05";
-        const testError = scenario.degree === 1 ? "0.48" : scenario.degree === 3 ? "0.15" : scenario.degree === 8 ? "0.65" : "0.85";
-        
-        panel.append("text")
-            .attr("x", panelWidth - margin.right).attr("y", panelHeight - 10)
-            .attr("text-anchor", "end")
-            .style("font-size", "11px").style("fill", "#777")
-            .text(`Train: ${trainError} · Test: ${testError}`);
     });
     
     const bvSection = document.querySelector('#bias-variance-viz')?.closest('.demo-section');
@@ -816,9 +804,9 @@ function initFeatureSpaceEvolution() {
     // Three noisy blobs that we slowly pull apart in feature space
     const numPoints = 20;
     const classes = [
-        { id: 0, color: "#555", targetX: -1.5, targetY: 1.2 },
-        { id: 1, color: "#999", targetX: 1.5, targetY: 1.2 },
-        { id: 2, color: "#ccc", targetX: 0, targetY: -1.5 }
+        { id: 0, color: "#777", targetX: -1.5, targetY: 1.2 },
+        { id: 1, color: "#aaa", targetX: 1.5, targetY: 1.2 },
+        { id: 2, color: "#ddd", targetX: 0, targetY: -1.5 }
     ];
     
     const dataPoints = [];
@@ -841,14 +829,14 @@ function initFeatureSpaceEvolution() {
         .attr("class", "feat-point")
         .attr("r", 4)
         .attr("fill", d => d.color)
-        .attr("opacity", 0.7)
-        .attr("stroke", d => d.class === 0 ? "#333" : d.class === 1 ? "#777" : "#aaa")
+        .attr("opacity", 0.75)
+        .attr("stroke", d => d.class === 0 ? "#555" : d.class === 1 ? "#888" : "#bbb")
         .attr("stroke-width", 1.5);
     
     const epochLabel = featContainer.append("text")
         .attr("x", width - 10).attr("y", margin.top + 15)
         .attr("text-anchor", "end")
-        .style("font-size", "14px").style("fill", "#999").style("font-weight", "400");
+        .style("font-size", "14px").style("fill", "#b0b0b0").style("font-weight", "400");
     
     function updateFeatureSpace(epoch) {
         const progress = epoch / 30; // 0 to 1
@@ -1033,42 +1021,42 @@ function initLossVisualization() {
         .y1(d => yScale(d.lossUpper));
     
     const trainConfidence = container.append("path")
-        .attr("fill", "#666")
-        .attr("opacity", 0.2);
+        .attr("fill", "#888")
+        .attr("opacity", 0.25);
     
     const valConfidence = container.append("path")
-        .attr("fill", "#999")
-        .attr("opacity", 0.15);
+        .attr("fill", "#bbb")
+        .attr("opacity", 0.2);
     
     const trainPath = container.append("path")
         .attr("fill", "none")
-        .attr("stroke", "#888")
-        .attr("stroke-width", 2);
+        .attr("stroke", "#aaa")
+        .attr("stroke-width", 2.5);
     
     const valPath = container.append("path")
         .attr("fill", "none")
         .attr("stroke", "#fff")
-        .attr("stroke-width", 2);
+        .attr("stroke-width", 2.5);
     
     const legend = container.append("g")
         .attr("transform", `translate(${width - 110}, ${margin.top})`);
     
     legend.append("line")
         .attr("x1", 0).attr("x2", 30).attr("y1", 0).attr("y2", 0)
-        .attr("stroke", "#888").attr("stroke-width", 2);
+        .attr("stroke", "#aaa").attr("stroke-width", 2.5);
     
     legend.append("text")
         .attr("x", 35).attr("y", 4)
-        .style("fill", "#999").style("font-size", "11px")
+        .style("fill", "#b0b0b0").style("font-size", "11px")
         .text("Training");
     
     legend.append("line")
         .attr("x1", 0).attr("x2", 30).attr("y1", 20).attr("y2", 20)
-        .attr("stroke", "#fff").attr("stroke-width", 2);
+        .attr("stroke", "#fff").attr("stroke-width", 2.5);
     
     legend.append("text")
         .attr("x", 35).attr("y", 24)
-        .style("fill", "#999").style("font-size", "11px")
+        .style("fill", "#b0b0b0").style("font-size", "11px")
         .text("Validation");
     
     const overfit = container.append("text")
@@ -1219,27 +1207,67 @@ function initScrollAnimations() {
                     const paragraph = textContainer.querySelector('p');
                     const controls = section.querySelector('.controls');
 
+                    const expandBtn = textContainer.querySelector('.expand-btn');
+                    
                     if (heading) {
                         typeText(heading, 45, () => {
                             if (paragraph) {
                                 typeText(paragraph, 22, () => {
                                     if (controls) {
+                                        // First remove hidden class to make element visible in DOM
                                         controls.classList.remove('delayed-hidden');
-                                        controls.classList.add('delayed-shown');
+                                        // Use requestAnimationFrame to ensure smooth transition
+                                        requestAnimationFrame(() => {
+                                            requestAnimationFrame(() => {
+                                                controls.classList.add('delayed-shown');
+                                            });
+                                        });
+                                        // Show expand button after controls animation completes (0.8s)
+                                        if (expandBtn) {
+                                            setTimeout(() => {
+                                                expandBtn.classList.add('visible');
+                                            }, 800);
+                                        }
+                                    } else if (expandBtn) {
+                                        expandBtn.classList.add('visible');
                                     }
                                 });
                             } else if (controls) {
                                 controls.classList.remove('delayed-hidden');
-                                controls.classList.add('delayed-shown');
+                                requestAnimationFrame(() => {
+                                    requestAnimationFrame(() => {
+                                        controls.classList.add('delayed-shown');
+                                    });
+                                });
+                                if (expandBtn) {
+                                    setTimeout(() => {
+                                        expandBtn.classList.add('visible');
+                                    }, 800);
+                                }
+                            } else if (expandBtn) {
+                                expandBtn.classList.add('visible');
                             }
                         });
                     } else if (paragraph) {
                         typeText(paragraph, 22, () => {
                             if (controls) {
                                 controls.classList.remove('delayed-hidden');
-                                controls.classList.add('delayed-shown');
+                                requestAnimationFrame(() => {
+                                    requestAnimationFrame(() => {
+                                        controls.classList.add('delayed-shown');
+                                    });
+                                });
+                                if (expandBtn) {
+                                    setTimeout(() => {
+                                        expandBtn.classList.add('visible');
+                                    }, 800);
+                                }
+                            } else if (expandBtn) {
+                                expandBtn.classList.add('visible');
                             }
                         });
+                    } else if (expandBtn) {
+                        expandBtn.classList.add('visible');
                     }
                 }
             }
@@ -1265,6 +1293,14 @@ function initExpandableSections() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
+    // Animate header on page load
+    const header = document.querySelector('header');
+    if (header) {
+        requestAnimationFrame(() => {
+            header.classList.add('visible');
+        });
+    }
+    
     initBoundaryVisualization();
     initLossVisualization();
     initOptimizerComparison();

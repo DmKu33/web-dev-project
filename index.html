@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>D3.js ML Visualization Prototype</title>
+    <title>D3.js ML Visualizations</title>
     <link rel="stylesheet" href="assets/css/styles.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
@@ -68,7 +68,7 @@
     <section class="demo-section">
         <div class="demo-text">
             <h2>Optimizer Comparison</h2>
-            <p>Different optimizers take different paths down the same loss surface. Watch SGD, Momentum, and Adam navigate a 2D landscape. Each has unique strengths and trade-offs.</p>
+            <p>Different optimizers take different paths down the same loss surface. Watch SGD and Adam navigate a 2D landscape. Each has unique strengths and trade-offs.</p>
             
             <div class="controls">
                 <div>
@@ -82,7 +82,7 @@
                 <span class="icon">▼</span> Detailed Explanation
             </button>
             <div class="detailed-content">
-                <p>SGD takes direct steps opposite to the gradient. Simple but can be slow and gets stuck in valleys. Momentum accumulates velocity from previous steps, helping it roll through flat regions and escape shallow minima faster. Adam adapts the learning rate per parameter using momentum and second-moment estimates. Generally faster and more robust, but uses more memory. There is no universally best optimizer. Choice depends on your problem, data, and computational constraints.</p>
+                <p>SGD (Stochastic Gradient Descent) takes direct steps opposite to the gradient. Simple and reliable, but can be slow in flat regions and gets stuck in valleys. Adam is an adaptive optimizer that adjusts the learning rate per parameter using both momentum and second-moment estimates. It converges faster and handles sparse gradients well, making it the default choice for many deep learning tasks. There is no universally best optimizer—the choice depends on your problem, data characteristics, and computational constraints.</p>
             </div>
         </div>
         
@@ -136,47 +136,44 @@
         </div>
     </section>
 
-    <!-- REFERENCES -->
+    <!-- ABOUT & REFERENCES -->
     <section class="references-section">
         <div class="references-container">
-            <h2>References & Data Sources</h2>
+            <h2>About This Project</h2>
+            <div class="about-text">
+                <p>This project explores machine learning concepts through interactive visualizations. I selected topics that are inherently visual—decision boundaries, loss landscapes, optimizer behavior, bias-variance tradeoffs, and feature space evolution—because animation and interactivity make these concepts more intuitive than static explanations.</p>
+                <p>Built with D3.js v7, the project experiments with natural animations and scroll-driven storytelling, inspired by sites like Distill.pub and r2d3.us. All data is synthetically generated in JavaScript using mathematical functions and procedural generation.</p>
+            </div>
+            
+            <h2 style="margin-top: 3rem;">Tools & Further Reading</h2>
             <div class="references-grid">
                 <div class="reference-item">
-                    <h3>Datasets</h3>
-                    <ul>
-                        <li>Scikit-learn make_circles dataset (Pedregosa et al., 2011)</li>
-                        <li>Quadratic loss surface for optimizer comparison</li>
-                        <li>Synthetic sine wave data for bias-variance demonstration</li>
-                    </ul>
-                </div>
-                <div class="reference-item">
-                    <h3>Concepts</h3>
-                    <ul>
-                        <li>Gradient Descent Optimization (Ruder, 2016)</li>
-                        <li>Bias-Variance Tradeoff (Hastie et al., 2009)</li>
-                        <li>Neural Network Decision Boundaries (Goodfellow et al., 2016)</li>
-                        <li>Feature Learning & Representation (Bengio et al., 2013)</li>
-                    </ul>
-                </div>
-                <div class="reference-item">
-                    <h3>Libraries</h3>
+                    <h3>Libraries Used</h3>
                     <ul>
                         <li>D3.js v7 for interactive visualizations</li>
-                        <li>NumPy & Scikit-learn for data generation</li>
+                        <li>Scikit-learn for exploring dataset patterns during development</li>
                     </ul>
                 </div>
-            </div>
-            <div class="references-citation">
-                <p><strong>Key References:</strong></p>
-                <p class="citation">Pedregosa et al. (2011). Scikit-learn: Machine Learning in Python. <em>JMLR 12</em>, pp. 2825-2830.</p>
-                <p class="citation">Goodfellow, Bengio & Courville (2016). <em>Deep Learning</em>. MIT Press.</p>
-                <p class="citation">Ruder, S. (2016). An overview of gradient descent optimization algorithms. <em>arXiv:1609.04747</em>.</p>
+                <div class="reference-item">
+                    <h3>Further Reading</h3>
+                    <ul>
+                        <li>Ruder, S. (2016). An overview of gradient descent optimization algorithms. <em>arXiv:1609.04747</em></li>
+                        <li>Goodfellow, Bengio & Courville (2016). <em>Deep Learning</em>. MIT Press</li>
+                    </ul>
+                </div>
+                <div class="reference-item">
+                    <h3>Inspiration</h3>
+                    <ul>
+                        <li><a href="https://distill.pub" target="_blank" style="color: #b0b0b0;">Distill.pub</a> — Visual explanations of ML</li>
+                        <li><a href="https://r2d3.us" target="_blank" style="color: #b0b0b0;">r2d3.us</a> — Scroll-driven data stories</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
 
     <footer>
-        <p>Interactive ML Visualization Prototype · Built with D3.js</p>
+        <p>Interactive ML Visualizations · Built with D3.js</p>
     </footer>
 
     <script src="assets/js/main.js"></script>

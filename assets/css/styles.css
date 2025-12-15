@@ -18,6 +18,14 @@ header {
     padding: 3rem 2rem;
     text-align: center;
     border-bottom: 1px solid #222;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+header.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 header h1 {
@@ -104,9 +112,16 @@ header p {
     gap: 0.7rem;
     font-size: 0.9rem;
     font-weight: 300;
-    transition: all 0.2s;
     border-radius: 3px;
     width: fit-content;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.8s, transform 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.8s, border-color 0.2s, color 0.2s;
+}
+
+.expand-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .expand-btn:hover {
@@ -124,15 +139,21 @@ header p {
 }
 
 .detailed-content {
-    display: none;
+    max-height: 0;
+    overflow: hidden;
     border-left: 2px solid #222;
     padding-left: 1.5rem;
-    padding-top: 0.5rem;
     margin-top: 1rem;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), padding-top 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .detailed-content.visible {
-    display: block;
+    max-height: 500px;
+    padding-top: 0.5rem;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .detailed-content p {
@@ -157,6 +178,10 @@ header p {
     background: #121212;
     border: 1px solid #2a2a2a;
     border-radius: 4px;
+    opacity: 0;
+    transform: translateY(15px);
+    visibility: hidden;
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s 0.8s;
 }
 
 .controls.delayed-hidden {
@@ -165,6 +190,10 @@ header p {
 
 .controls.delayed-shown {
     display: flex;
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s;
 }
 
 .controls label {
@@ -279,10 +308,33 @@ button:active {
 .references-container h2 {
     font-size: 2rem;
     font-weight: 300;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     color: #ffffff;
     text-align: center;
     letter-spacing: -0.5px;
+}
+
+.about-text {
+    max-width: 900px;
+    margin: 0 auto 3rem;
+    text-align: left;
+}
+
+.about-text p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #b0b0b0;
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+}
+
+.references-container a {
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.references-container a:hover {
+    color: #fff;
 }
 
 .references-grid {
@@ -359,18 +411,18 @@ footer {
 /* SVG axis styling for minimal look */
 .axis path,
 .axis line {
-    stroke: #333;
+    stroke: #555;
     stroke-width: 1;
 }
 
 .axis text {
-    fill: #666;
+    fill: #999;
     font-size: 11px;
     font-weight: 300;
 }
 
 .grid line {
-    stroke: #1a1a1a;
+    stroke: #2a2a2a;
     stroke-opacity: 0.8;
 }
 
@@ -384,7 +436,7 @@ text {
 
 .legend {
     font-size: 11px;
-    fill: #999;
+    fill: #b0b0b0;
 }
 
 /* Responsive */
